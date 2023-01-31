@@ -1,11 +1,16 @@
 package com.example.my_airbnb
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.*
 import com.naver.maps.map.overlay.Marker
 import com.naver.maps.map.util.FusedLocationSource
+import com.naver.maps.map.util.MarkerIcons
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
 
 // 우리집 좌표
 //  "x": "126.9050532",
@@ -29,8 +34,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(Map: NaverMap) {
         naverMap = Map
-        naverMap.maxZoom = 10.0
-        naverMap.minZoom = 10.0
 
         val cameraUpdate = CameraUpdate.scrollTo(LatLng(37.4652659, 126.9050532))
         naverMap.moveCamera(cameraUpdate)
@@ -42,10 +45,48 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
             FusedLocationSource(this@MainActivity, LOCATION_PERMISSION_REQUEST_CODE)
         naverMap.locationSource = locationSource
 
-        val marker = Marker()
-        marker.position = LatLng(37.4652659, 126.9050532)
-        marker.map = naverMap
+        getHouseListFromAPI()
     }
+
+    private fun getHouseListFromAPI() {
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://run.mocky.io")
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        retrofit.create(HouseService::class.java).also { it ->
+            it.getHouseList()
+                .enqueue(object : Callback<HouseDto> {
+                    override fun onResponse(call: Call<HouseDto>, response: Response<HouseDto>) {
+                        if (response.isSuccessful.not()) {
+                            // 실패 처리에 대한 구현
+                            return
+                        }
+                        response.body()?.let { dto ->
+                            updateMarker(dto.items)
+                        }
+                    }
+
+                    override fun onFailure(call: Call<HouseDto>, t: Throwable) {
+                        // 실패 처리에 대한 구현
+                    }
+                })
+        }
+    }
+
+    private fun updateMarker(houses: List<HouseModel>) {
+        houses.forEach { house ->
+            //Log.d("house", house.toString())
+            val marker = Marker()
+            marker.position = LatLng(house.lat, house.lng)
+            // TODO : 마커 클릭 리스너
+            marker.map = naverMap
+            marker.tag = house.id
+            marker.icon = MarkerIcons.BLACK
+            marker.iconTintColor = Color.RED
+        }
+    }
+
 
     override fun onRequestPermissionsResult(
         requestCode: Int,
