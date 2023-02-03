@@ -172,7 +172,6 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback, Overlay.OnClickLis
 
     }
 
-
     override fun onStart() {
         super.onStart()
         mapView.onStart()
