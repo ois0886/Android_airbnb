@@ -15,7 +15,7 @@
         android:layout_height="match_parent">
 
         <ImageView
-            android:id="@+id/thumbnailIamgeView"
+            android:id="@+id/thumbnailImageView"
             android:layout_width="100dp"
             android:layout_height="100dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -32,7 +32,7 @@
             android:maxLines="2"
             android:textColor="@color/black"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/thumbnailIamgeView"
+            app:layout_constraintStart_toEndOf="@id/thumbnailImageView"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="강남역 최저가!!강남역 최저가!!강남역 최저가!!강남역 최저가강남역 최저가강남역 최저가강남역 최저가강남역 최저가" />
 
@@ -47,7 +47,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/thumbnailIamgeView"
+            app:layout_constraintStart_toEndOf="@id/thumbnailImageView"
             app:layout_constraintTop_toBottomOf="@id/titleTextView"
             tools:text="23,000원" />
 
